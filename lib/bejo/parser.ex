@@ -61,11 +61,55 @@ defmodule Bejo.Parser do
     |> ignore(string(")"))
     |> label("expression in parentheses")
 
+  call_args =
+    optional(
+      parsec(:exp)
+      |> optional(
+        allow_space
+        |> ignore(string(","))
+        |> concat(allow_space)
+        |> parsec(:call_args)
+      )
+    )
+
+  local_function_call =
+    identifier
+    |> ignore(string("("))
+    |> wrap(call_args)
+    |> ignore(string(")"))
+    |> Helper.to_ast(:local_function_call)
+
+  remote_function_call =
+    identifier
+    |> ignore(string("."))
+    |> concat(identifier)
+    |> ignore(string("("))
+    |> wrap(call_args)
+    |> ignore(string(")"))
+    |> Helper.to_ast(:remote_function_call)
+
+  function_call =
+    choice([
+      remote_function_call,
+      local_function_call
+    ])
+    |> label("function call")
+
+  exp_match =
+    identifier
+    |> concat(allow_space)
+    |> ignore(string("="))
+    |> concat(allow_space)
+    |> parsec(:exp)
+    |> label("match expression")
+    |> Helper.to_ast(:exp_match)
+
   factor =
     choice([
       integer,
-      identifier,
-      exp_paren
+      exp_paren,
+      function_call,
+      identifier
     ])
 
   term =
@@ -93,7 +137,11 @@ defmodule Bejo.Parser do
     Helper.to_ast(exp_bin_op, :exp_bin_op)
 
   exp =
-    exp_add_op
+    choice([
+      exp_match,
+      exp_add_op
+    ])
+    |> label("an expression")
 
   exps =
     parsec(:exp)
@@ -176,6 +224,7 @@ defmodule Bejo.Parser do
   defcombinatorp :exp_bin_op, exp_bin_op
   defcombinatorp :term, term
   defcombinatorp :args, args
+  defcombinatorp :call_args, call_args
 
   defparsec :parse, module
 

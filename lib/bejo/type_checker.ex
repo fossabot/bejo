@@ -56,7 +56,7 @@ defmodule Bejo.TypeChecker do
 
   def infer_block(env, []) do
     Logger.debug "Block is empty."
-    {:ok, :Nothing, env}
+    {:ok, "Nothing", env}
   end
   def infer_block(env, [exp]) do
     Logger.debug "Block has one exp left"
@@ -72,9 +72,10 @@ defmodule Bejo.TypeChecker do
 
   # Integer literals
   def infer_exp(env, {:integer, _line, integer}) do
-    Logger.debug "Integer #{integer} found. Type: #{:Int}"
-    {:ok, :Int, env}
+    Logger.debug "Integer #{integer} found. Type: Int"
+    {:ok, "Int", env}
   end
+
   # Variables
   def infer_exp(env, {:identifier, _line, name}) do
     type = Env.scope_get(env, name)
@@ -84,6 +85,70 @@ defmodule Bejo.TypeChecker do
     else
       Logger.debug "Variable type not found in scope: #{name}"
       {:error, "Unknown variable: #{name}"}
+    end
+  end
+
+  # Function calls
+  def infer_exp(env, {:call, {name, _line}, args, module}) do
+    exp = %{args: args, name: name}
+    module_name = module || Env.current_module(env)
+    Logger.debug "Inferring type of function: #{name}"
+    infer_args(env, exp, module_name)
+  end
+
+  # =
+  def infer_exp(env, {{:=, _}, {:identifier, _line, left}, right}) do
+    case infer_exp(env, right) do
+      {:ok, type, env} ->
+        Logger.debug "Adding variable to scope: #{left}:#{type}"
+        env = Env.scope_add(env, left, type)
+        {:ok, type, env}
+      error ->
+        error
+    end
+  end
+
+  def infer_args(env, exp, module) do
+    case do_infer_args(env, exp) do
+      {:ok, type_acc, env} ->
+        signature = get_signature(module, exp.name, type_acc)
+
+        if module == Env.current_module(env) && !Env.known_function?(env, signature) do
+          Logger.debug "Checking unknown function #{signature} in module: #{module}"
+          case check_by_signature(env, signature) do
+            {:ok, _, _} = result -> result
+            error -> error
+          end
+        else
+          get_type_by_signature(env, signature)
+        end
+
+      error ->
+        error
+    end
+  end
+
+  defp do_infer_args(env, exp) do
+    Enum.reduce_while(exp.args, {:ok, [], env}, fn arg, {:ok, type_acc, env} ->
+      case infer_exp(env, arg) do
+        {:ok, type, env} ->
+          Logger.debug "Argument of #{exp.name} is type: #{type}"
+          {:cont, {:ok, [type | type_acc], env}}
+        error ->
+          Logger.debug "Argument of #{exp.name} cannot be inferred"
+          {:halt, error}
+      end
+    end)
+  end
+
+  defp get_type_by_signature(env, signature) do
+    type = Env.get_function_type(env, signature)
+    if type do
+      Logger.debug "Type of function signature: #{signature} is: #{type}"
+      {:ok, type, env}
+    else
+      Logger.debug "Type of function signature: #{signature} not found"
+      {:error, "Unknown function: #{signature}"}
     end
   end
 
@@ -116,5 +181,19 @@ defmodule Bejo.TypeChecker do
 
   defp get_signature(module, name, arg_types) do
     "#{module}.#{name}(#{Enum.join(arg_types, ",")})"
+  end
+
+  defp check_by_signature(env, signature) do
+    functions = Env.ast_functions(env)
+    module = Env.current_module(env)
+    function =
+      Enum.find(functions, fn function ->
+        signature(function, module) == signature
+      end)
+    if function do
+      check(function, env)
+    else
+      {:error, "Undefined function: #{signature} in module #{module}"}
+    end
   end
 end
