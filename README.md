@@ -13,7 +13,7 @@ Here's a quick walkthrough of Bejo's syntax.
 A function in Bejo looks like this:
 
 ```elixir
-# example.bo
+# example.bejo
 fn sum(a: Int, b: Int) : Int do
   a + b
 end
@@ -37,7 +37,7 @@ end
 
 All functions in Bejo are nested inside modules.
 Module names in Bejo are inferred from their file paths, so a Bejo file named
-`example.bo` will become a module named `example`. All functions inside this
+`example.bejo` will become a module named `example`. All functions inside this
 file will belong to this module.
 
 The `sum` function can be called like so:
@@ -85,7 +85,7 @@ mix deps.get
 iex -S mix
 
 # In the Elixir shell, compile and load a Bejo file using the following:
-> Bejo.Code.load_file("example.bo")
+> Bejo.Code.load_file("example.bejo")
 
 # Now you can run functions from the module like this:
 > :example.sum(40, 2)
@@ -98,8 +98,8 @@ iex -S mix
 # Create the executable
 mix escript.build
 
-# Call the function example.sum(1, 2) from the file example.bo
-./bejo exec --function="sum(1, 2)" example.bo
+# Call the function example.sum(1, 2) from the file example.bejo
+./bejo exec --function="sum(1, 2)" example.bejo
 ```
 
 ### Your first HTTP server
@@ -109,7 +109,7 @@ handlers. By default, Bejo looks for routes in a function called
 `router.routes()`, so you need to define that first:
 
 ```elixir
-# Inside router.bo
+# Inside router.bejo
 fn routes : List(List(String)) do
   [
     ["GET", "/", "greet"]
@@ -126,10 +126,10 @@ Now start the webserver in one of two ways:
 #### Using Elixir shell
 
 ```
-# router.bo is in the `examples` folder
+# router.bejo is in the `examples` folder
 > Bejo.start("examples")
 
-# Reload routes after changing routes.bo
+# Reload routes after changing routes.bejo
 > Bejo.RouteStore.reload_routes()
 ```
 
@@ -139,10 +139,10 @@ Now start the webserver in one of two ways:
 # Create the executable
 mix escript.build
 
-# router.bo is in the `examples` folder
+# router.bejo is in the `examples` folder
 ./bejo start examples
 
-# Re-run the command after making changes to routes.bo
+# Re-run the command after making changes to routes.bejo
 ```
 
 Now open `http://localhost:6060` in the browser to see "Hello world" served

@@ -27,7 +27,7 @@ defmodule Bejo.Code do
       Logger.debug "Loaded module #{module}"
       result
     else
-      {:error, "Invalid filename. Make sure it's something like foo/bar/baz.bo"}
+      {:error, "Invalid filename. Make sure it's something like foo/bar/baz.bejo"}
     end
   end
 
@@ -37,10 +37,10 @@ defmodule Bejo.Code do
   end
 
   defp validate_filename?(file) do
-    String.match?(file, ~r/^([a-z][a-z0-9]*\/)*[a-z][a-z0-9]*.bo/)
+    String.match?(file, ~r/^([a-z][a-z0-9]*\/)*[a-z][a-z0-9]*.bejo/)
   end
 
   defp file_to_module(file) do
-    String.trim_trailing(file, ".bo")
+    String.trim_trailing(file, ".bejo")
   end
 end

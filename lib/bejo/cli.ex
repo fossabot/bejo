@@ -13,7 +13,7 @@ defmodule Bejo.Cli do
 
     {opts, rest} = OptionParser.parse!(rest, options)
 
-    main_file = List.first(rest) || "main.bo"
+    main_file = List.first(rest) || "main.bejo"
     function = opts[:function] || "main.start()"
 
     {:module, module} = Bejo.Code.load_file(main_file)
