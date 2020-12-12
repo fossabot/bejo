@@ -18,7 +18,7 @@ defmodule Bejo.Cli do
 
     {:module, module} = Bejo.Code.load_file(main_file)
     Logger.debug "Calling :#{module}.#{function}"
-    {result, _binding} = Code.eval_string(":#{module}.#{function}")
+    {result, _binding} = Code.eval_string(":\"#{module}\".#{function}")
     IO.inspect result
   end
 end
