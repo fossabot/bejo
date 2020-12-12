@@ -55,14 +55,20 @@ example.sum(40, 2)
 Bejo is currently a proof of concept so its data types and operators are quite
 limited.
 
-Data types - integers and strings.
+Data types - integers, strings and lists.
 Operators - assignment and arithmetic.
 
 ```elixir
+# Type: Int
 a = 40
 b = 2
 c = a + b
+
+# Type: String
 str = "Hello world"
+
+# Type: List(Int)
+list_of_ints = [1, 2, 3]
 ```
 
 ### Running Bejo programs
@@ -95,3 +101,49 @@ mix escript.build
 # Call the function example.sum(1, 2) from the file example.bo
 ./bejo exec --function="sum(1, 2)" example.bo
 ```
+
+### Your first HTTP server
+
+Bejo comes with a webserver which allows you to quickly create HTTP request
+handlers. By default, Bejo looks for routes in a function called
+`router.routes()`, so you need to define that first:
+
+```elixir
+# Inside router.bo
+fn routes : List(List(String)) do
+  [
+    ["GET", "/", "greet"]
+  ]
+end
+
+fn greet : String do
+  "Hello world"
+end
+```
+
+Now start the webserver in one of two ways:
+
+#### Using Elixir shell
+
+```
+# router.bo is in the `examples` folder
+> Bejo.start("examples")
+
+# Reload routes after changing routes.bo
+> Bejo.RouteStore.reload_routes()
+```
+
+#### Using `bejo` executable
+
+```
+# Create the executable
+mix escript.build
+
+# router.bo is in the `examples` folder
+./bejo start examples
+
+# Re-run the command after making changes to routes.bo
+```
+
+Now open `http://localhost:6060` in the browser to see "Hello world" served
+by Bejo.
