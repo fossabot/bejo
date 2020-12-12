@@ -67,17 +67,29 @@ c = sum(a, b)
 
 Bejo is written in Elixir, so make sure you have that installed.
 Follow [these instructions](https://elixir-lang.org/install.html) to install
-Elixir.
+Elixir. Next, clone this repo, cd into the directory and then follow the below instructions.
+
+#### Using Elixir shell
 
 ```
-# Clone and cd into bejo, then run the following:
+# Install dependencies and run the Elixir shell
 mix deps.get
 iex -S mix
 
-# In the elixir shell, compile and load a Bejo file using the following:
+# In the Elixir shell, compile and load a Bejo file using the following:
 > Bejo.Code.load_file("example.bo")
 
 # Now you can run functions from the module like this:
 > :example.sum(40, 2)
 > 42
+```
+
+#### Using `bejo` executable
+
+```
+# Create the executable
+mix escript.build
+
+# Call the function example.sum(1, 2) from the file example.bo
+./bejo exec --function="sum(1, 2)" example.bo
 ```

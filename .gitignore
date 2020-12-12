@@ -21,3 +21,6 @@ erl_crash.dump
 
 # Ignore package tarball (built via "mix hex.build").
 bejo-*.tar
+
+# Ignore the escript executable
+/bejo
