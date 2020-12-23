@@ -2,7 +2,10 @@
 
 A modern programming language from the future, just for fun.
 
-Bejo is a new programming language, currently under active development. It's a modern, statically-typed functional and runs on the BEAM (Erlang VM), but focusing in building and maintaining scalable web apps without compromising on programmer ergonomics.
+Bejo is a new programming language, currently under active development.
+It's a modern, statically-typed functional and runs on the BEAM (Erlang VM), but focusing in building and maintaining scalable web apps without compromising on programmer ergonomics.
+
+Project status: Actively developed. Not ready for production.
 
 ### Syntax
 
@@ -23,7 +26,7 @@ This is a function named `sum` which takes two integers and returns another inte
 Identifiers in Bejo are written in snake_case (similar to Ruby, Elixir or Python).
 Types are written in CamelCase.
 
-Bejo has a type checker which makes sure your function actually return what
+Bejo has a type checker which makes sure your functions actually return what
 they say they do. For example, the type checker will report an error for
 the following code:
 
