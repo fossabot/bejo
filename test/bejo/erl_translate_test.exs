@@ -102,4 +102,23 @@ defmodule Bejo.ErlTranslateTest do
 
     assert result == {:atom, 1, true}
   end
+
+  test "if-else expression" do
+    str =  """
+    if true do
+      "foo"
+    else
+      "bar"
+    end
+    """
+
+    ast = Bejo.Parser.expression!(str)
+    result = ErlTranslate.translate_expression(ast)
+    assert {:case, 5, {:atom, 1, true},
+      [
+        {:clause, 5, [{:atom, 5, true}], [], [{:string, 2, 'foo'}]},
+        {:clause, 5, [{:atom, 5, false}], [], [{:string, 4, 'bar'}]}
+      ]
+    } = result
+  end
 end
