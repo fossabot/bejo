@@ -209,4 +209,20 @@ defmodule Bejo.TypeCheckerTest do
       assert {:ok, "Fn(->Int)", _} = TypeChecker.infer_exp(env, ast)
     end
   end
+
+  describe "boolean" do
+    test "true" do
+      str = "true"
+      ast = Bejo.Parser.expression!(str)
+
+      assert {:ok, "Bool", _} = TypeChecker.infer_exp(Env.init(), ast)
+    end
+
+    test "false" do
+      str = "false"
+      ast = Bejo.Parser.expression!(str)
+
+      assert {:ok, "Bool", _} = TypeChecker.infer_exp(Env.init(), ast)
+    end
+  end
 end
