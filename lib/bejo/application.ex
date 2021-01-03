@@ -6,7 +6,12 @@ defmodule Bejo.Application do
   use Application
 
   def start(_type, _args) do
-    children = []
+    children =
+      if Application.get_env(:bejo, :start_cli) do
+        [%{id: Bejo.Cli, start: {Bejo.Cli, :start, [nil, nil]}}]
+      else
+        []
+      end
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
