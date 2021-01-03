@@ -141,4 +141,24 @@ defmodule Bejo.ErlTranslateTest do
       ]
     } = result
   end
+
+  describe "tuple" do
+    test "single element tuple" do
+      str = "{1}"
+      ast = Bejo.Parser.expression!(str)
+
+      assert {:tuple, 1, [{:integer, 1, 1}]} = ErlTranslate.translate_expression(ast)
+    end
+
+    test "tuple of tuples" do
+      str = "{{1}, {2}}"
+      ast = Bejo.Parser.expression!(str)
+
+      assert {
+        :tuple,
+        1,
+        [{:tuple, 1, [{:integer, 1, 1}]}, {:tuple, 1, [{:integer, 1, 2}]}]
+      } = ErlTranslate.translate_expression(ast)
+    end
+  end
 end

@@ -83,6 +83,10 @@ defmodule Bejo.ErlTranslate do
     do_translate_list(value, line)
   end
 
+  defp translate_exp({:tuple, {line, _, _}, value}) do
+    {:tuple, line, translate_exps(value)}
+  end
+
   defp translate_exp({:record, {line, _, _}, name, k_vs}) do
     k_vs = Enum.map(k_vs, fn {{:identifier, {l, _, _}, k}, v} ->
       {:map_field_assoc, l, {:atom, l, k}, translate_exp(v)}
