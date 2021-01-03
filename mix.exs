@@ -10,7 +10,7 @@ defmodule Bejo.MixProject do
       escript: [main_module: Bejo.Cli],
       deps: deps(),
       xref: [exclude: [:router]],
-      elixirc_paths: elixirc_paths(Mix.env),
+      elixirc_paths: elixirc_paths(Mix.env())
     ]
   end
 

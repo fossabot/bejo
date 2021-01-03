@@ -9,7 +9,6 @@ defmodule Bejo.ParserHelper do
     |> map({Bejo.ParserHelper, :do_to_ast, [kind]})
   end
 
-
   def put_line_offset({[{result, {line, line_start_offset}}], string_offset}) do
     {result, {line, line_start_offset, string_offset}}
   end
@@ -26,7 +25,8 @@ defmodule Bejo.ParserHelper do
     {{:if, line}, condition, true_block, false_block}
   end
 
-  def do_to_ast({[left, bin_op, right | rest], line}, :exp_bin_op) when bin_op in ["+", "-", "*", "/"] do
+  def do_to_ast({[left, bin_op, right | rest], line}, :exp_bin_op)
+      when bin_op in ["+", "-", "*", "/"] do
     new_left = {:call, {String.to_atom(bin_op), line}, [left, right], :kernel}
     do_to_ast({[new_left | rest], line}, :exp_bin_op)
   end
@@ -88,6 +88,7 @@ defmodule Bejo.ParserHelper do
     case val do
       [exp, args] ->
         {:call, {exp, line}, args}
+
       [val] ->
         val
     end
@@ -127,8 +128,10 @@ defmodule Bejo.ParserHelper do
     case ast do
       [[], function, arg_types] ->
         {:function_ref, line, {nil, value_from_identifier(function), arg_types}}
+
       [[module], function, arg_types] ->
-        {:function_ref, line, {value_from_identifier(module), value_from_identifier(function), arg_types}}
+        {:function_ref, line,
+         {value_from_identifier(module), value_from_identifier(function), arg_types}}
     end
   end
 
