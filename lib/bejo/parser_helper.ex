@@ -57,7 +57,14 @@ defmodule Bejo.ParserHelper do
   end
 
   def do_to_ast({types, line}, :type) do
-    type = Enum.join(types)
+    type =
+      Enum.reduce(types, "", fn
+        {:atom, _l, value}, acc ->
+          acc <> ":#{value}"
+
+        type, acc ->
+          acc <> type
+      end)
 
     {:type, line, type}
   end
@@ -119,6 +126,10 @@ defmodule Bejo.ParserHelper do
       [[module], function, arg_types] ->
         {:function_ref, line, {value_from_identifier(module), value_from_identifier(function), arg_types}}
     end
+  end
+
+  def do_to_ast({[{:identifier, line, value}], line}, :atom) do
+    {:atom, line, value}
   end
 
   defp value_from_identifier({:identifier, _line, value}) do
