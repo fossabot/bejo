@@ -1,12 +1,12 @@
-defmodule Bejo.ParserHelper do
+defmodule Bejo.Parser.Helper do
   import NimbleParsec
 
   def to_ast(c, kind) do
     c
     |> line()
     |> byte_offset()
-    |> map({Bejo.ParserHelper, :put_line_offset, []})
-    |> map({Bejo.ParserHelper, :do_to_ast, [kind]})
+    |> map({Bejo.Parser.Helper, :put_line_offset, []})
+    |> map({Bejo.Parser.Helper, :do_to_ast, [kind]})
   end
 
   def put_line_offset({[{result, {line, line_start_offset}}], string_offset}) do
