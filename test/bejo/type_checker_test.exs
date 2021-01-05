@@ -33,7 +33,7 @@ defmodule Bejo.TypeCheckerTest do
   end
 
   test "infer type of arithmetic expressions" do
-    str = "1 + 2"
+    str = "-1 + 2"
 
     ast = TestParser.expression!(str)
 

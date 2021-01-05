@@ -70,7 +70,7 @@ Bejo is currently a proof of concept so its data types and operators are quite
 limited.
 
 Data types - atoms, integers, strings, booleans, lists and records.
-Operators - assignment(=), logical(&, |) and arithmetic(+, -, *, /).
+Operators - assignment(=), logical(&, |, !) and arithmetic(+, -, *, /).
 
 ```elixir
 # This is a comment
