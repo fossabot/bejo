@@ -17,6 +17,8 @@ A function in Bejo looks like this:
 
 ```elixir
 # example.bejo
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbejo-lang%2Fbejo.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbejo-lang%2Fbejo?ref=badge_shield)
+
 fn sum(a: Int, b: Int) : Int do
   a + b
 end
@@ -178,3 +180,7 @@ mix escript.build
 
 Now open `http://localhost:6060` in the browser to see "Hello world" served
 by Bejo.
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbejo-lang%2Fbejo.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbejo-lang%2Fbejo?ref=badge_large)
